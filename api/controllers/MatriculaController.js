@@ -1,4 +1,4 @@
-const db = require('../models/index.js');
+const db = require('../models');
 
 class MatriculaController {
     static async buscaTodasMatriculas(req, res) {
@@ -18,6 +18,19 @@ class MatriculaController {
         try {
             const matricula = await db.Matriculas.findByPk(Number(id));
             return res.status(200).json(matricula);
+
+        } catch (error) {
+            return res.status(500).json(error.message);
+        }
+
+    }
+
+    static async buscaMatriculasPorEstudante(req, res) {
+        const { estudante_id } = req.params;
+        try {
+            const pessoa = await db.Pessoas.findByPk(estudante_id);
+            const matriculas = await pessoa.getAulasMatriculadas();
+            return res.status(200).json(matriculas);
 
         } catch (error) {
             return res.status(500).json(error.message);

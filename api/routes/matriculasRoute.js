@@ -6,6 +6,7 @@ const router = Router();
 router
     .get('/matriculas', MatriculaController.buscaTodasMatriculas)
     .get('/matriculas/:id', MatriculaController.buscaMatriculaId)
+    .get('/matriculas/pessoas/:estudante_id', MatriculaController.buscaMatriculasPorEstudante)
     .post('/matriculas/', MatriculaController.criaMatricula)
     .post('/matriculas/:id/restaura', MatriculaController.restauraMatricula)
     .put('/matriculas/:id', MatriculaController.atualizaMatricula)

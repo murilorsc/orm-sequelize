@@ -1,9 +1,12 @@
-const db = require('../models/index.js');
+
+const { NiveisServices } = require('../services'); //nome do arquivo eh index entao nao precisa por aqui
+const niveisServices = new NiveisServices();
 
 class NivelController {
     static async buscaTodosNiveis(req, res) {
+        const order = ['id'];
         try {
-            const todosNiveis = await db.Niveis.findAll();
+            const todosNiveis = await niveisServices.buscaTodosRegistros(order);
             return res.status(200).json(todosNiveis);
 
         } catch (error) {
@@ -13,10 +16,10 @@ class NivelController {
     }
 
     static async buscaNivelId(req, res) {
-        const id = req.params.id;
+        const { id } = req.params;
 
         try {
-            const nivel = await db.Niveis.findByPk(Number(id));
+            const nivel = await niveisServices.buscaRegistroPorId(Number(id));
             return res.status(200).json(nivel);
 
         } catch (error) {
@@ -27,7 +30,7 @@ class NivelController {
 
     static async criaNivel(req, res) {
         try {
-            const nivel = await db.Niveis.create(req.body);
+            const nivel = await niveisServices.criaRegistro(req.body);
             return res.status(201).json(nivel);
 
         } catch (error) {
@@ -37,10 +40,10 @@ class NivelController {
     }
 
     static async atualizaNivel(req, res) {
-        const id = req.params.id;
+        const { id } = req.params;
         try {
-            await db.Niveis.update(req.body, { where: { id: Number(id) } });
-            const nivelAtualizada = await db.Niveis.findByPk(Number(id));
+            await niveisServices.atualizaRegistroUnico(req.body, id);
+            const nivelAtualizada = await niveisServices.buscaRegistroPorId(Number(id));
             return res.status(200).json(nivelAtualizada);
 
         } catch (error) {
@@ -50,9 +53,9 @@ class NivelController {
     }
 
     static async apagaNivel(req, res) {
-        const id = req.params.id;
+        const { id } = req.params;
         try {
-            await db.Niveis.destroy({ where: { id: Number(id) } });
+            await niveisServices.apagaRegistro(id);
             return res.status(200).json({ mensagem: `O registro ID ${id} foi apagado com sucesso.` });
 
         } catch (error) {
